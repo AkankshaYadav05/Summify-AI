@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summify AI · AI Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+
+<body>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-header-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </span>
+      <span class="sidebar-title">History</span>
+      <span class="sidebar-count hidden" id="hist-count">0</span>
+    </div>
+    <div class="history-list" id="history-list">
+      <div class="history-empty" id="history-empty">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <p>No summaries yet.<br/>Generate one to start.</p>
+      </div>
+    </div>
+  </aside>
+
+  
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <span class="logo-name">Summify</span>
+        <span class="logo-sub">· AI Summarizer</span>
+      </div>
+
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">
+        <svg id="theme-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <span id="theme-label">Light mode</span>
+      </button>
+    </header>
+
+    <!-- Scrollable content -->
+    <div class="content">
+      <div class="inner">
+
+        <!-- Page title -->
+        <h1 class="page-title">Summify AI</h1>
+        <p class="page-sub">Paste any conversation or transcript and get an AI‑crafted summary instantly.</p>
+
+        <!-- Input card -->
+        <div class="card mt-6">
+          <div class="card-header">
+            <span class="card-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Input Bar
+            </span>
+            <span class="char-count" id="char-count">0 / 4,000</span>
+          </div>
+
+          <div class="source-tabs">
+            <button class="source-tab active" onclick="switchSource(event, 'text')">
+              Text
+            </button>
+
+            <button class="source-tab" onclick="switchSource(event, 'dialogue')">
+              Dialogues
+            </button>
+
+            <button class="source-tab" onclick="switchSource(event, 'pdf')">
+              Documents
+            </button>
+
+            <button class="source-tab" onclick="switchSource(event, 'youtube')">
+              Links
+            </button>
+
+          </div>
+
+          <div id="text-input-container">
+            <textarea
+              id="text"
+              rows="12"
+              placeholder="Paste your text here..."
+              oninput="onDialogueInput()"
+            ></textarea>
+          </div>
+
+          <div id="dialogue-input-container" class="hidden">
+            <textarea
+              id="dialogue"
+              rows="12"
+              placeholder="Paste dialogue or conversation here..."
+              oninput="onDialogueInput()"
+            ></textarea>
+          </div>
+
+          <div id="pdf-input-container" class="hidden">
+            <label class="upload-box">
+              <input type="file" id="pdf-file" accept=".pdf" hidden />
+              
+              <div class="upload-content">
+                <p>Upload PDF/Docs</p>
+                <span>Drag & drop or click</span>
+              </div>
+            </label>
+          </div>
+
+          <div id="link-input-container" class="hidden">
+            <input
+              type="text"
+              id="link-input"
+              placeholder="Paste YouTube or article URL..."
+              class="link-input"
+            />
+          </div>
+                    
+          <div class="progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls mt-3">
+          <div class="controls-left">
+            <div class="dropdown" id="dropdown">
+              <button class="dropdown-btn" onclick="toggleDropdown()" id="dropdown-btn">
+                <span class="dropdown-btn-left">
+                  <span class="dropdown-icon-accent" id="dd-icon"></span>
+                  <span id="dd-label">Short Summary</span>
+                </span>
+                <span class="dropdown-chevron" id="dd-chevron">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="dropdown-menu" id="dropdown-menu"></div>
+            </div>
+          </div>
+
+          <div class="controls-right">
+            <button class="btn btn-ghost" id="clear-btn" onclick="handleClear()" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+              Clear
+            </button>
+            <button class="btn btn-primary" id="summarize-btn" onclick="handleSummarize()" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              Summarize
+            </button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="error-banner mt-3 hidden" id="error-banner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="error-text">Something went wrong. Please try again.</span>
+        </div>
+
+        <!-- Skeleton -->
+        <div class="card mt-4 hidden" id="skeleton-card">
+          <div class="skeleton">
+            <div class="skeleton-line" style="width:30%"></div>
+            <div class="skeleton-line" style="width:90%;animation-delay:.07s"></div>
+            <div class="skeleton-line" style="width:80%;animation-delay:.14s"></div>
+            <div class="skeleton-line" style="width:95%;animation-delay:.21s"></div>
+            <div class="skeleton-line" style="width:65%;animation-delay:.28s"></div>
+            <div class="skeleton-line" style="width:50%;animation-delay:.35s;margin-bottom:0"></div>
+          </div>
+        </div>
+
+        <!-- Output card -->
+        <div class="card mt-4 hidden" id="output-card">
+          <div class="card-header">
+            <span class="card-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              Summary
+              <span class="type-pill" id="output-type-pill">Short Summary</span>
+            </span>
+            <button class="copy-btn" id="copy-btn" onclick="handleCopy()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy
+            </button>
+          </div>
+          <div class="output-text" id="output-text"></div>
+          <div class="card-footer" id="output-footer"></div>
+        </div>
+
+        <p class="footer-note">Summify AI made by Akanksha Yadav</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
