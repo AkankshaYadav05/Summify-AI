@@ -126,14 +126,16 @@
     ══════════════════════════════ */
     .sidebar {
       width: 290px;
-
+      height: 100vh; /* IMPORTANT */
+      
       background: var(--sidebar-bg);
-
       border-right: 1px solid var(--sidebar-border);
-
       backdrop-filter: blur(18px);
 
       position: relative;
+
+      display: flex;          
+      flex-direction: column; 
     }
 
     .sidebar::after {
@@ -191,6 +193,19 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.25);
     }
 
     .history-empty {
@@ -399,7 +414,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 14px;
-      /* border-bottom: 1px solid var(--border-soft); */
+      border-bottom: 1px solid var(--border-soft);
     }
 
     .card-label {
