@@ -167,16 +167,14 @@ async function callSummarizer(text, type, source = currentSource) {
     formData.append("source", "pdf");
     formData.append("summary_type", type);
     formData.append("pdf", file);
-
+    
     res = await fetch("/summarize", { method: "POST", body: formData });
   } else {
     const payload = {
       source,
       summary_type: type,
-      text: source === "youtube" || source === "article" ? "" : text,
-      link: source === "youtube" || source === "article" ? text : "",
+      text: text,
     };
-
     res = await fetch("/summarize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -197,6 +195,9 @@ async function handleSummarize() {
 
   if (currentSource === "text") {
     inputText = document.getElementById("text").value.trim();
+    console.log("Textarea value:", document.getElementById("text").value);
+    console.log("Input text:", inputText);
+    console.log("Current source:", currentSource);
   } else if (currentSource === "dialogue") {
     inputText = document.getElementById("dialogue").value.trim();
   } else if (currentSource === "youtube") {
