@@ -51,10 +51,14 @@ async def summarize(
             uploaded_file = pdf or file
             if uploaded_file is None:
                 raise ValueError("No document file uploaded.")
+
             extracted_text = extract_document_text(
                 uploaded_file,
                 filename=getattr(uploaded_file, "filename", None),
             )
+            if not extracted_text or not extracted_text.strip():
+                raise ValueError("No text could be extracted from the uploaded document.")
+
             summary = summarize_extracted_text(extracted_text, summary_type)
 
         else:

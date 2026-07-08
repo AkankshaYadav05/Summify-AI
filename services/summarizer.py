@@ -338,6 +338,8 @@ def summarize_text(text: str, summary_type: str = "short") -> str:
 
 def summarize_extracted_text(text: str, summary_type: str = "short") -> str:
     """Summarize text that has already been extracted from a document upload."""
+    if not text or not text.strip():
+        return ""
     return summarize_text(text, summary_type)
 
 
