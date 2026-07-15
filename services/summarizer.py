@@ -1,16 +1,3 @@
-"""
-FLAN-T5 text summarizer.
-
-Single public function:
-    summarize_text(text, summary_type) -> str
-
-summary_type: "short" | "bullets" | "notes"
-
-The TextSummarizer class is kept internal; callers should only need
-summarize_text().  Import the class directly only if you need batch
-inference (TextSummarizer.summarize_batch).
-"""
-
 import re
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
@@ -22,16 +9,16 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 class TextSummarizer:
     def __init__(self, model_name: str = "google/flan-t5-base", quantize: bool = False):
-        """Initialize the summarizer.
+        # """Initialize the summarizer.
 
-        Args:
-            model_name: Pre-trained seq2seq model.
-                - "google/flan-t5-base" / any "*t5*" model: instruction-tuned,
-                  REQUIRES a "summarize: " task prefix — handled automatically.
-                - "facebook/bart-large-cnn" / "sshleifer/distilbart-cnn-12-6":
-                  summarization-finetuned, no prefix needed.
-            quantize: Apply dynamic int8 quantization (CPU only).
-        """
+        # Args:
+        #     model_name: Pre-trained seq2seq model.
+        #         - "google/flan-t5-base" / any "*t5*" model: instruction-tuned,
+        #           REQUIRES a "summarize: " task prefix — handled automatically.
+        #         - "facebook/bart-large-cnn" / "sshleifer/distilbart-cnn-12-6":
+        #           summarization-finetuned, no prefix needed.
+        #     quantize: Apply dynamic int8 quantization (CPU only).
+        # """
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -48,7 +35,7 @@ class TextSummarizer:
         self.model.eval()
 
     # ------------------------------------------------------------------
-    # Pre / post processing
+    # Pre/Post processing
     # ------------------------------------------------------------------
 
     def preprocess_text(self, text: str) -> str:
@@ -62,9 +49,9 @@ class TextSummarizer:
     @staticmethod
     def clean_summary(summary: str) -> str:
         """Remove degenerate word/phrase repetition from model output."""
-        # Collapse repeated words: "tool tool tool" → "tool"
+
         summary = re.sub(r'\b(\w+)(\s+\1\b){1,}', r'\1', summary, flags=re.IGNORECASE)
-        # Collapse repeated 2-4 word phrases
+
         summary = re.sub(r'\b((?:\w+\s+){1,4}\w+)\s+\1\b', r'\1', summary, flags=re.IGNORECASE)
         summary = re.sub(r'\s+([.,!?])', r'\1', summary)
         summary = re.sub(r'\s+', ' ', summary).strip()
@@ -201,8 +188,6 @@ adv_summarizer = TextSummarizer(model_name="google/flan-t5-base", quantize=True)
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
-
-import re
 
 def summarize_text(text: str, summary_type: str = "short") -> str:
     """

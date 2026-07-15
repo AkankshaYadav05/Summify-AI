@@ -1,14 +1,3 @@
-"""
-Dialogue summarization service.
-
-Uses the local fine-tuned model (text_summary_model) for the "Dialogues" tab.
-
-Bug fixed vs original:
-  - repetition_penalty=2.0 on the final-pass generation was causing degenerate
-    looping on some inputs. Reduced to 1.5, which suppresses repeats without
-    trapping the beam search in penalty-avoidance spirals.
-"""
-
 import re
 from typing import List
 

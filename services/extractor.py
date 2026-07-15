@@ -1,13 +1,3 @@
-"""
-Text extraction utilities.
-
-extract_document_text(file, max_pages) — UploadFile → clean text
-    Works for PDF, Word (.docx), and plain text (.txt / .md) files.
-
-Raises ValueError for problems the user can fix (bad file, wrong type, etc.)
-so the caller can turn those into a 400 response without catching Exception broadly.
-"""
-
 import os
 import re
 import subprocess
