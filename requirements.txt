@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+transformers
+torch
+sentencepiece
+accelerate
+safetensors
+
+pymupdf
+python-docx
+
+jinja2
+python-multipart
+
+numpy
+huggingface-hub
