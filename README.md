@@ -213,13 +213,13 @@ http://127.0.0.1:8000
 
 ## 📸 Screenshots
 
-Include screenshots of:
+<img width="1893" height="919" alt="image" src="https://github.com/user-attachments/assets/446b3433-60ec-4fe0-ae71-f8b89eb7a01d" />
+<img width="1898" height="813" alt="image" src="https://github.com/user-attachments/assets/ff7e944f-0f3e-4049-b310-b7e53e6f719c" />
+<img width="1873" height="880" alt="image" src="https://github.com/user-attachments/assets/2543f2e9-773f-4c02-8af1-fb10de57af23" />
 
-- Home Page
-- Text Summarizer
-- Dialogue Summarizer
-- Document Summarizer
-- Generated Summary
+
+
+
 
 ---
 
